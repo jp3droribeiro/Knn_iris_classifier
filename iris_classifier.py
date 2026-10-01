@@ -18,13 +18,16 @@ st.set_page_config(
     page_title="Iris Explorer",
     layout="wide"
 )
-
-st.title("Iris Explorer")
-st.write(
-    "Explore o algoritmo KNN e descubra "
-    "como ele classifica diferentes espécies de flores."
+st.markdown(
+    '<h2 style="color: green;">Classificador Iris</h2>',
+    unsafe_allow_html=True
 )
-st.image("img\iris_info.jpg", caption="Legenda da imagem")
+st.write(
+    "Classificação de flores Iris usando o algoritmo KNN (K-Nearest Neighbors) com scikit-learn e Streamlit."
+    "Usando o conjunto de dados Iris, que contém informações sobre 150 amostras de flores, cada uma com 4 características "
+    "(comprimento e largura da sépala e da pétala) e pertencentes a uma das 3 espécies: Setosa, Versicolor e Virginica."
+)
+st.image("img\iris_info.jpg", caption="Imagem ilustrativa")
 
 
 # 2. Carregar os dados
@@ -44,7 +47,6 @@ df["especie"] = [
 ]
 
 
-
 # 3. Dividir os dados
 X_train, X_test, y_train, y_test = train_test_split(
     X,
@@ -53,7 +55,6 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=42,
     stratify=y
 )
-
 
 
 # 4. Controles da interface
@@ -68,7 +69,7 @@ k = st.sidebar.slider(
     step=1
 )
 
-st.sidebar.subheader("Medidas da flor")
+st.sidebar.subheader("Selecione as medidas da flor")
 
 sepal_length = st.sidebar.slider(
     "Comprimento da sépala (cm)",
@@ -80,7 +81,7 @@ sepal_width = st.sidebar.slider(
     2.0, 4.5, 3.5, 0.1
 )
 
-petal_length = st.sidebar.number_input(
+petal_length = st.sidebar.slider(
     "Comprimento da pétala (cm)",
     1.0, 7.0, 1.4, 0.1
 )
@@ -91,13 +92,10 @@ petal_width = st.sidebar.slider(
 )
 
 
-
 # 5. Treinar o modelo
-
-
 modelo = make_pipeline(
     StandardScaler(),
-    KNeighborsClassifier(n_neighbors=k)
+    KNeighborsClassifier(n_neighbors=k, metric="euclidean") 
 )
 
 modelo.fit(X_train, y_train)
@@ -190,7 +188,7 @@ st.dataframe(
 
 st.subheader("Visualização das espécies")
 
-fig, ax = plt.subplots(figsize=(7, 4))
+fig, ax = plt.subplots(figsize=(7, 5))
 
 cores = {
     "setosa": "royalblue",
@@ -225,4 +223,4 @@ ax.set_title("Distribuição das espécies de Iris")
 ax.legend()
 ax.grid(alpha=0.2)
 
-st.pyplot(fig)
+st.pyplot(fig,width=700)
